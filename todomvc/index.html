@@ -20,15 +20,15 @@
       <h1 data-cy="app-title">todos</h1>
       <div class="todoapp">
         <header class="header">
-          <input id="add-todo" class="new-todo" autocomplete="off" placeholder="What needs to be done?" :value="newTodo" @input="setNewTodo" @keyup.enter="addTodo">
+          <input id="add-todo" class="new-todo" autocomplete="off" placeholder="What needs to be done?" data-cy="new-todo-input" :value="newTodo" @input="setNewTodo" @keyup.enter="addTodo">
         </header>
         <section class="main" v-show="todos.length" v-cloak>
-          <ul class="todo-list" id="todo-list">
-            <li v-for="todo in todos" class="todo" :key="todo.id" :class="{ completed: todo.completed }" @mouseover="showByIndex = todo" @mouseout="showByIndex = null">
+          <ul class="todo-list" id="todo-list" data-cy="todo-list">
+            <li v-for="todo in todos" class="todo" data-cy="todo" :key="todo.id" :class="{ completed: todo.completed }" @mouseover="showByIndex = todo" @mouseout="showByIndex = null">
               <div class="view">
-                <input class="toggle" type="checkbox" v-model="todo.completed" @click="completeTodo(todo)">
-                <label>{{ todo.title }}</label>
-                <button class="destroy" v-show="showByIndex === todo" @click="removeTodo(todo)"></button>
+                <input class="toggle" type="checkbox" v-model="todo.completed" @click="completeTodo(todo)" data-cy="todo-completed-checkbox">
+                <label data-cy="todo-label">{{ todo.title }}</label>
+                <button class="destroy" v-show="showByIndex === todo" @click="removeTodo(todo)" data-cy="remove-todo-button"></button>
               </div>
             </li>
           </ul>
@@ -39,28 +39,28 @@
   </script>
   <script type="text/x-template" id="login">
     <section style="text-align: center">
-      <h1>login</h1>
+      <h1 data-cy="login-title">login</h1>
       <div class="login">
         <form>
-          <input type="email" placeholder="email" autocomplete="off" :value="email" @input="setEmail">
-          <input type="password" placeholder="password" autocomplete="off" :value="password" @input="setPassword" @keyup.enter="loginSend">
+          <input type="email" data-cy="email-input" placeholder="email" autocomplete="off" :value="email" @input="setEmail">
+          <input type="password" data-cy="password-input" placeholder="password" autocomplete="off" :value="password" @input="setPassword" @keyup.enter="loginSend">
         </form>
       </div>
-      <button class="login-button" @click="loginSend">Log in</button>
+      <button class="login-button" data-cy="login-button" @click="loginSend">Log in</button>
     </section>
   </script>
   <script type="text/x-template" id="signup">
     <section style="text-align: center">
-      <h1>signup</h1>
+      <h1 data-cy="signup-title">signup</h1>
         <div class="signup">
           <form>
-            <input type="email" placeholder="email" autocomplete="off" :value="email" @input="setEmail">
-            <input type="password" placeholder="password" autocomplete="off" :value="password" @input="setPassword" @keyup.enter="signupSend">
+            <input type="email" data-cy="email-input" placeholder="email" autocomplete="off" :value="email" @input="setEmail">
+            <input type="password" data-cy="password-input" placeholder="password" autocomplete="off" :value="password" @input="setPassword" @keyup.enter="signupSend">
           </form>
         </div>
         <div>
           <div style="margin-bottom: 16px"><input type="checkbox" :value="sendEmail" @click="sendEmailFlag"><label>Send me a welcome email</label></div>
-          <button class="signup-button" @click="signupSend">Sign up</button>
+          <button class="signup-button" data-cy="signup-button" @click="signupSend">Sign up</button>
         </div>
     </section>
   </script>
@@ -69,14 +69,14 @@
     <router-view :key="$route.path"></router-view>
     <footer class="info">
       <p>Written by
-        <a href="http://evanyou.me" target="_blank">Evan You</a>
+        <a href="http://evanyou.me" target="_blank" data-cy="evan-you-link">Evan You</a>
       </p>
       <p>Part of
-        <a href="http://todomvc.com" target="_blank">TodoMVC</a>
+        <a href="http://todomvc.com" target="_blank" data-cy="todomvc-link">TodoMVC</a>
       </p>
     </footer>
-    <div id="errorMessage" v-show="errorMessage.show" v-cloak>{{ errorMessage.text }}</div>
-    <div id="loginMessage" v-show="loggedIn" v-cloak>User is logged in</div>
+    <div id="errorMessage" data-cy="error-message" v-show="errorMessage.show" v-cloak>{{ errorMessage.text }}</div>
+    <div id="loginMessage" data-cy="login-message" v-show="loggedIn" v-cloak>User is logged in</div>
   </section>
 
   <script src="vendor/polyfill.min.js"></script>
