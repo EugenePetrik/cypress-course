@@ -31,8 +31,16 @@ describe('Advanced assertions (BDD style assertions)', () => {
         expect(items[1]).to.contain.text('buy milk');
         expect(items[2]).to.contain.text('create todos list');
       });
+
+    const todos = ['Learn JS', 'buy milk', 'create todos list'];
+
+    // each - iterates through an array like structure (arrays or objects with a length property)
+    // Docs at https://docs.cypress.io/api/commands/each.html
+    cy.get('[data-cy=todo]').each((element, index) => {
+      expect(element).to.contain.text(todos[index]);
+    });
   });
-  
+
   it('should have todo item with text "wash dishes" on first position (solution 1)', () => {
     cy.get('[data-cy=todo]', { timeout: 30000 })
       .should('have.length', 3)
