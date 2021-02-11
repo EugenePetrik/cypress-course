@@ -1,0 +1,87 @@
+defaults: &defaults
+  working_directory: ~/cypress-sample-project
+  docker:
+    - image: circleci/node:latest
+
+caches:
+  - &npm_cache online-consulting-frontend-v1{{ checksum "package-lock.lock" }}
+
+references:
+  restore_npm_cache: &restore_npm_cache
+    restore_cache:
+      keys:
+        - *npm_cache
+
+  npm_install: &npm_install
+    run:
+      name: Installing packages
+      command: npm install
+
+  save_npm_cache: &save_npm_cache
+    save_cache:
+      name: Save Npm Package Cache
+      key: *npm_cache
+      paths:
+        - ~/.cache
+
+version: 2.1
+
+jobs:
+  linters:
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - <<: *restore_npm_cache
+      - <<: *npm_install
+      - <<: *save_npm_cache
+
+      - run:
+          name: Running linters
+          command: npm run lint
+
+  cypress:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - run:
+          name: Installing dependencies
+          command: |
+            sudo apt update
+            sudo apt-get install cmake xvfb libgbm-dev libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth
+
+      - run:
+          name: Starting frontend server
+          command: npm run start
+          background: true
+
+      - run:
+          name: Waiting for frontend server
+          command: npm wait-on http://localhost:3000 -t 20000
+
+      - run:
+          name: Running cypress tests
+          command: npm run cy:run
+
+      - store_artifacts:
+          name: Saving Cypress screenshots
+          path: ~/cypress-sample-project/cypress/screenshots
+          destination: /cypress-screenshots
+
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - linters
+      - cypress
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 3 * * *"
+          filters:
+            branches:
+              only: master
+    jobs:
+      - cypress
