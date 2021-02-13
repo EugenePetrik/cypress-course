@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-const { resetDatabase } = require('../../todomvc/resetDatabase');
+const { resetDatabase } = require('../../resetDatabase');
 
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins

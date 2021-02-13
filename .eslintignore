@@ -1,1 +1,5 @@
 node_modules/*
+vendor/*
+app.js
+middleware.js
+resetDatabase.js
