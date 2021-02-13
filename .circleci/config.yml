@@ -24,11 +24,6 @@ jobs:
       - run:
           name: Starting frontend server
           command: npm run start
-          background: true
-
-      - run:
-          name: Waiting for frontend server
-          command: npm wait-on http://localhost:3000 -t 20000
 
       - run:
           name: Running cypress tests
