@@ -23,7 +23,7 @@ describe('Headless mode', () => {
     cy.get('[data-cy=todo]').should('have.length', 1).and('contain.text', title);
   });
   
-  it('should fail', {
+  it.skip('should fail', {
     retries: {
       runMode: 2,
       openMode: 1,

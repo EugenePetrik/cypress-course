@@ -32,7 +32,7 @@ describe('Advanced assertions (BDD style assertions)', () => {
         expect(items[2]).to.contain.text('create todos list');
       });
 
-    const todos = ['Learn JS', 'buy milk', 'create todos list'];
+    const todos = ['wash dishes', 'buy milk', 'create todos list'];
 
     // each - iterates through an array like structure (arrays or objects with a length property)
     // Docs at https://docs.cypress.io/api/commands/each.html

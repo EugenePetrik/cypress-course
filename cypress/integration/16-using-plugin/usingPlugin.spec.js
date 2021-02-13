@@ -47,9 +47,9 @@ describe('Using plugin', () => {
       cy.visit('/');
     });
 
-    it('checks item of todo', {
+    it.skip('checks item of todo', {
       retries: {
-        runMode: 2,
+        runMode: 3,
         openMode: 1,
       }
     }, () => {

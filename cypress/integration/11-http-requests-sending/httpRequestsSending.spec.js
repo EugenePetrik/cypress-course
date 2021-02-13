@@ -42,7 +42,7 @@ describe('HTTP requests sending', () => {
     });
   });
 
-  describe('sends request to petstore swagger', () => {
+  describe.skip('sends request to petstore swagger', () => {
     it('should receive pet by id', () => {
       cy.request({
         method: 'GET',
