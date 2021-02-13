@@ -2,7 +2,7 @@ const fs = require('fs');
 
 module.exports.resetDatabase = () => {
 
-  let filename = 'todomvc/data.json';
+  let filename = 'data.json';
   let content = JSON.stringify({
     'todos': [],
     'accounts': []
@@ -11,5 +11,4 @@ module.exports.resetDatabase = () => {
   fs.writeFileSync(filename, content);
 
   return null;
-
 };
