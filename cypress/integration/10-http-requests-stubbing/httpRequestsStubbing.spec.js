@@ -6,23 +6,19 @@ describe('HTTP requests stubbing', () => {
   });
 
   beforeEach(() => {
-    cy.server();
-
-    cy.route('GET', '/todos', 'fx:three-items').as('todosList');
-
+    cy.intercept('GET', '/todos', { fixture: 'three-items.json' }).as('todosList');
     cy.visit('/');
   });
 
   it('has zero items in list', () => {
     cy.wait('@todosList');
-
     cy.get('[data-cy=todo]').should('have.length', 3);
   });
 
   it('has stubbed items in todo list', () => {
     cy.wait('@todosList').should((routes) => {
-      expect(routes.status).to.eq(200);
-      expect(routes.method).to.eq('GET');
+      expect(routes.response.statusCode).to.eq(200);
+      expect(routes.request.method).to.eq('GET');
       expect(routes.response.body).to.have.length(3);
 
       const responseBodyLength = routes.response.body.length;
@@ -35,11 +31,9 @@ describe('HTTP requests stubbing', () => {
   });
 
   it('shows error when adding new item', () => {
-    cy.route({
-      method: 'POST',
-      url: '/todos',
-      response: [],
-      status: 500,
+    cy.intercept('POST', '/todos', {
+      statusCode: 500,
+      body: [],
     }).as('todoCreate');
 
     cy.get('[data-cy=new-todo-input]').type('wash dishes{enter}');
@@ -53,20 +47,18 @@ describe('HTTP requests stubbing', () => {
   it('creates completed todo item', () => {
     const todoTitle = 'buy milk';
 
-    cy.route({
-      method: 'POST',
-      url: '/todos',
-      response: {
+    cy.intercept('POST', '/todos', {
+      statusCode: 201,
+      body: {
         'completed': true,
         'id': 10,
         'title': todoTitle,
-      },
-      status: 201,
+      }
     }).as('todoCreate');
 
     cy.get('[data-cy=new-todo-input]').type(`${todoTitle}{enter}`);
 
-    cy.wait('@todoCreate');
+    cy.wait('@todoCreate').its('response.statusCode').should('eq', 201);
 
     cy.get('[data-cy=todo]').should('have.length', 4).then((todoItem) => {
       cy.wrap(todoItem).first().should('contain.text', 'take over the world');
