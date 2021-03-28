@@ -35,6 +35,11 @@ describe('Control application DOM', () => {
     cy.contains('[data-cy=evan-you-link]', 'Evan You')
       .invoke('attr', 'href')
       .should('include', 'http://evanyou.me');
+
+    cy.get('[data-cy=evan-you-link]').then(($link) => {
+      const evanYouUrl = $link.attr('href');
+      expect(evanYouUrl).to.eq('http://evanyou.me');
+    });
   });
 
   it('removes target attribute from a link to application author', () => {

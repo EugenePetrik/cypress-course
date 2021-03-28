@@ -21,6 +21,7 @@ const { resetDatabase } = require('../../resetDatabase');
 
 // eslint-disable-next-line no-unused-vars
 module.exports = (on, config) => {
+  require('cypress-log-to-output').install(on);
   on('task', {
     resetDatabase,
   });
