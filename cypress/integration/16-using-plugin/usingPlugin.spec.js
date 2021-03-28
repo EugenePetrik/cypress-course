@@ -41,9 +41,7 @@ describe('Using plugin', () => {
           }
         ]);
 
-      cy.server();
-      cy.route('GET', '/todos').as('todosList');
-    
+      cy.intercept('GET', '/todos').as('todosList');
       cy.visit('/');
     });
 

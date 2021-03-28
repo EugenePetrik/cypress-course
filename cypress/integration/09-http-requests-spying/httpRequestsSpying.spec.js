@@ -4,15 +4,14 @@ describe('HTTP requests spying', () => {
   beforeEach(() => {
     cy.task('resetDatabase');
 
-    cy.server();
-    cy.route('GET', '/todos').as('getTodos');
-    cy.route('POST', '/todos').as('createTodo');
+    cy.intercept('GET', '/todos').as('getTodos');
+    cy.intercept('POST', '/todos').as('createTodo');
   
     cy.visit('/');
   });
   
   it('has no elements', () => {
-    cy.wait('@getTodos').its('status').should('eq', 200);
+    cy.wait('@getTodos').its('response.statusCode').should('eq', 200);
   
     cy.get('[data-cy=todo]').should('have.length', 0);
   });
@@ -21,9 +20,9 @@ describe('HTTP requests spying', () => {
     cy.get('[data-cy=new-todo-input]').type('wash dishes{enter}');
   
     cy.wait('@createTodo').then((todoItem) => {
-        expect(todoItem.status).to.eq(201);
-        expect(todoItem.statusMessage).to.eq('201 (Created)');
-        expect(todoItem.method).to.eq('POST');
+        expect(todoItem.response.statusCode).to.eq(201);
+        expect(todoItem.response.statusMessage).to.eq('Created');
+        expect(todoItem.request.method).to.eq('POST');
 
         expect(todoItem.response.headers['content-type']).to.eq('application/json; charset=utf-8');
 
@@ -42,8 +41,8 @@ describe('HTTP requests spying', () => {
     cy.wait(['@createTodo', '@createTodo']).then((routes) => {
       expect(routes).to.have.length(2);
 
-      expect(routes[0].status).to.equal(201);
-      expect(routes[1].status).to.equal(201);
+      expect(routes[0].response.statusCode).to.equal(201);
+      expect(routes[1].response.statusCode).to.equal(201);
 
       const firstTodo = routes[0].response.body.title.trim();
       const secondTodo = routes[1].response.body.title.trim();
