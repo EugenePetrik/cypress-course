@@ -26,7 +26,6 @@ context('Cypress.Commands', () => {
       return subject;
     });
 
-    // eslint-disable-next-line no-unused-vars
     cy.get('button').console('info').then(($button) => {
       // subject is still $button
     });
@@ -62,29 +61,10 @@ context('Cypress.Cookies', () => {
   });
 
   it('.defaults() - set defaults for all cookies', () => {
-    if (Number(Cypress.version.charAt(0)) < 5) return;
-
     // now any cookie with the name 'session_id' will
     // not be cleared before each new test runs
     Cypress.Cookies.defaults({
       preserve: 'session_id',
-    });
-  });
-});
-
-context('Cypress.Server', () => {
-  beforeEach(() => {
-    cy.visit('https://example.cypress.io/cypress-api');
-  });
-
-  // Permanently override server options for
-  // all instances of cy.server()
-
-  // https://on.cypress.io/cypress-server
-  it('.defaults() - change default config of server', () => {
-    Cypress.Server.defaults({
-      delay: 0,
-      force404: false,
     });
   });
 });
