@@ -1,0 +1,30 @@
+name: Run Cypress Tests in Chrome
+
+on:
+  push:
+  schedule:
+    - cron: '0 3 * * *'
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [15.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cypress run Chrome headless
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm start
+          config-file: cypress.json
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 1
+          browser: chrome
+          headless: true
