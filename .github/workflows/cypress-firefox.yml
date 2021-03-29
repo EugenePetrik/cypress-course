@@ -27,16 +27,3 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 1
           browser: firefox
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: screenshots-in-firefox
-          path: app/firefox/cypress/screenshots
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: video-in-firefox
-          path: app/firefox/cypress/videos
-
-      - run: npx image-size cypress/screenshots/**/*.png
-        working-directory: app/firefox

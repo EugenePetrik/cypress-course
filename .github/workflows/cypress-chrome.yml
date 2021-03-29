@@ -28,16 +28,3 @@ jobs:
           wait-on-timeout: 1
           browser: chrome
           headless: true
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: screenshots-in-chrome
-          path: app/chrome/cypress/screenshots
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: video-in-chrome
-          path: app/chrome/cypress/videos
-
-      - run: npx image-size cypress/screenshots/**/*.png
-        working-directory: app/chrome
