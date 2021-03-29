@@ -1,0 +1,51 @@
+name: Run Cypress Tests in Chrome
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 3 * * *'
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cypress info
+        uses: ./
+        with:
+          build: npx cypress info
+          working-directory: app/chrome
+          browser: chrome
+
+      - name: Cypress run Chrome headless
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm start
+          config-file: cypress.json
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 1
+          browser: chrome
+          headless: true
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: screenshots-in-chrome
+          path: app/chrome/cypress/screenshots
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: video-in-chrome
+          path: app/chrome/cypress/videos
+
+      - run: npx image-size cypress/screenshots/**/*.png
+        working-directory: app/chrome
