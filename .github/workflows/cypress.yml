@@ -27,6 +27,6 @@ jobs:
           start: npm start
           config-file: cypress.json
           wait-on: "http://localhost:3000"
-          wait-on-timeout: 3
+          wait-on-timeout: 1
           browser: chrome
           headless: true
