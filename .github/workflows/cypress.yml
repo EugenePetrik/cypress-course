@@ -1,12 +1,22 @@
 name: Run Cypress Tests
 
-on: push
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 3 * * *'
 
 jobs:
   cypress-run:
     name: Run Cypress
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-2016]
+        node-version: [12.x, 14.x, 15.x]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -17,6 +27,6 @@ jobs:
           start: npm start
           config-file: cypress.json
           wait-on: "http://localhost:3000"
-          wait-on-timeout: 300
+          wait-on-timeout: 3
           browser: chrome
           headless: true
