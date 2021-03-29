@@ -10,7 +10,7 @@ describe('Make assertions', () => {
     cy.url().should('eq', 'http://localhost:3000/');
 
     const baseUrl = Cypress.config().baseUrl;
-    cy.log(baseUrl);   // returns http://localhost:3000
+    cy.log(baseUrl); // returns http://localhost:3000
 
     cy.url().should('eq', `${baseUrl}/`);
 
@@ -28,14 +28,14 @@ describe('Make assertions', () => {
     cy.get('[data-cy=todo]').first().should('be.visible');
     cy.get('[data-cy=todo]').eq(0).should('be.visible');
   });
-  
+
   it('adds two items', () => {
     // Add first todo
     cy.get('[data-cy=new-todo-input]').type('buy milk{enter}');
-  
+
     // Add second todo
     cy.get('[data-cy=new-todo-input]').type('wash dishes{enter}');
-  
+
     cy.get('[data-cy=todo]').should('have.length', 2);
 
     // its - get a property’s value on the previously yielded subject
@@ -43,9 +43,9 @@ describe('Make assertions', () => {
     cy.get('[data-cy=todo]').its('length').should('eq', 2);
   });
 
-  it('marks item as completed', () => {
+  it('marks item as completed', { browser: '!firefox' }, () => {
     cy.get('[data-cy=new-todo-input]').type('buy milk{enter}');
-  
+
     // Approach #1
     cy.contains('buy milk').should('exist');
 
@@ -54,23 +54,25 @@ describe('Make assertions', () => {
 
     // Approach #3
     cy.contains('[data-cy=todo]', 'buy milk').should('exist');
-  
+
     cy.get('[data-cy=todo-completed-checkbox]').click();
-  
+
     // Approach #1
     cy.get('[data-cy=todo]').should('have.class', 'completed');
-    cy.get('[data-cy=todo]').find('[data-cy=todo-label]')
+    cy.get('[data-cy=todo]')
+      .find('[data-cy=todo-label]')
       .should('have.css', 'text-decoration', 'line-through solid rgb(217, 217, 217)')
       .and('have.css', 'color', 'rgb(217, 217, 217)');
 
     // Approach #2
     // then - enables you to work with the subject yielded from the previous command
     // Docs at https://docs.cypress.io/api/commands/then.html
-    cy.get('[data-cy=todo]').then((todo) => {
+    cy.get('[data-cy=todo]').then(todo => {
       // wrap - yield the object passed into .wrap(). If the object is a promise, yield its resolved value
       // Docs at https://docs.cypress.io/api/commands/wrap.html
       cy.wrap(todo).should('have.class', 'completed');
-      cy.wrap(todo).find('[data-cy=todo-label]')
+      cy.wrap(todo)
+        .find('[data-cy=todo-label]')
         .should('have.css', 'text-decoration', 'line-through solid rgb(217, 217, 217)')
         .and('have.css', 'color', 'rgb(217, 217, 217)');
     });
