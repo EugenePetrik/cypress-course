@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-const { resetDatabase } = require('../../resetDatabase');
+const { resetDatabase } = require('../../app/resetDatabase');
 
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
