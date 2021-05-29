@@ -4,5 +4,6 @@
   "viewportHeight": 1080,
   "watchForFileChanges": false,
   "retries": 0,
+  "video": false,
   "ignoreTestFiles": [ "**/examples/**" ]
 }
