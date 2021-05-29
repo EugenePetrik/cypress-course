@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "./node_modules/.bin/json-server --static . data.json -m middleware.js --config json-server.json -w"
+    "start": "npx json-server --static . data.json -m middleware.js --config json-server.json -w"
   },
   "devDependencies": {
     "http-server": "^0.12.1",
