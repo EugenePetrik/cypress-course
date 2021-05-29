@@ -3,10 +3,8 @@
 (function () {
   Vue.use(Vuex);
 
-  function randomId () {
-    return Math.random()
-      .toString()
-      .substr(2, 10);
+  function randomId() {
+    return Math.random().toString().substr(2, 10);
   }
 
   const store = new Vuex.Store({
@@ -19,7 +17,7 @@
       password: '',
       errorMessage: {
         show: false,
-        text: ''
+        text: '',
       },
       loggedIn: false,
     },
@@ -31,67 +29,67 @@
       loggedIn: state => state.loggedIn,
       email: state => state.email,
       password: state => state.password,
-      sendEmail: state => state.sendEmail
+      sendEmail: state => state.sendEmail,
     },
     mutations: {
-      SET_LOADING (state, flag) {
+      SET_LOADING(state, flag) {
         state.loading = flag;
       },
-      SHOW_ERROR (state) {
+      SHOW_ERROR(state) {
         state.errorMessage.show = true;
         setTimeout(() => {
           state.errorMessage.show = false;
         }, 4000);
       },
-      ERROR_MESSAGE ( state, message ) {
+      ERROR_MESSAGE(state, message) {
         state.errorMessage.text = message;
       },
-      LOGGED_IN_MESSAGE (state) {
+      LOGGED_IN_MESSAGE(state) {
         state.loggedIn = true;
         setTimeout(() => {
           state.loggedIn = false;
         }, 4000);
       },
-      SIGNED_UP_MESSAGE (state) {
+      SIGNED_UP_MESSAGE(state) {
         state.signedUp = true;
         setTimeout(() => {
           state.signedUp = false;
         }, 4000);
       },
-      SET_TODOS (state, todos) {
+      SET_TODOS(state, todos) {
         state.todos = todos;
       },
-      SET_NEW_TODO (state, todo) {
+      SET_NEW_TODO(state, todo) {
         state.newTodo = todo;
       },
-      ADD_TODO (state, todoObject) {
+      ADD_TODO(state, todoObject) {
         console.log('add todo', todoObject);
         state.todos.push(todoObject);
       },
-      COMPLETE_TODO (todo) {
+      COMPLETE_TODO(todo) {
         console.log('complete todo ' + todo.id);
       },
-      REMOVE_TODO (state, todo) {
+      REMOVE_TODO(state, todo) {
         let todos = state.todos;
         console.log('removing todo');
         todos.splice(todos.indexOf(todo), 1);
       },
-      CLEAR_NEW_TODO (state) {
+      CLEAR_NEW_TODO(state) {
         state.newTodo = '';
         console.log('clearing new todo');
       },
-      SET_EMAIL (state, email) {
+      SET_EMAIL(state, email) {
         state.email = email;
       },
-      SET_PASSWORD (state, password) {
+      SET_PASSWORD(state, password) {
         state.password = password;
       },
-      SEND_EMAIL_FLAG (state, flag) {
+      SEND_EMAIL_FLAG(state, flag) {
         state.sendEmail = flag;
-      }
+      },
     },
     actions: {
-      loadTodos ({ commit }) {
+      loadTodos({ commit }) {
         commit('SET_LOADING', true);
 
         axios
@@ -108,10 +106,10 @@
             console.error(e.response.data);
           });
       },
-      setNewTodo ({ commit }, todo) {
+      setNewTodo({ commit }, todo) {
         commit('SET_NEW_TODO', todo);
       },
-      addTodo ({ commit, state }) {
+      addTodo({ commit, state }) {
         if (!state.newTodo) {
           // do not add empty todos
           return;
@@ -119,54 +117,60 @@
         const todo = {
           title: state.newTodo,
           completed: false,
-          id: randomId()
+          id: randomId(),
         };
-        axios.post('/todos', todo).then((todoItem) => {
-          commit('ADD_TODO', todoItem.data);
-        }).catch( () => {
-          commit('SHOW_ERROR');
-          commit('ERROR_MESSAGE', 'Sorry. There was an error creating todo item.');
-        });
+        axios
+          .post('/todos', todo)
+          .then(todoItem => {
+            commit('ADD_TODO', todoItem.data);
+          })
+          .catch(() => {
+            commit('SHOW_ERROR');
+            commit('ERROR_MESSAGE', 'Sorry. There was an error creating todo item.');
+          });
       },
-      completeTodo ({ commit }, todo) {
-        axios.patch(`/todos/${todo.id}`, {completed: !todo.completed});
+      completeTodo({ commit }, todo) {
+        axios.patch(`/todos/${todo.id}`, { completed: !todo.completed });
         commit('COMPLETE_TODO');
       },
-      removeTodo ({ commit }, todo) {
+      removeTodo({ commit }, todo) {
         axios.delete(`/todos/${todo.id}`).then(() => {
           console.log('removed todo', todo.id, 'from the server');
           commit('REMOVE_TODO', todo);
         });
       },
-      clearNewTodo ({ commit }) {
+      clearNewTodo({ commit }) {
         commit('CLEAR_NEW_TODO');
       },
-      setEmail ({ commit }, email) {
+      setEmail({ commit }, email) {
         commit('SET_EMAIL', email);
       },
-      setPassword ({ commit }, password) {
+      setPassword({ commit }, password) {
         commit('SET_PASSWORD', password);
       },
-      login ({ commit, state }) {
+      login({ commit, state }) {
         const credentials = {
           email: state.email,
-          password: state.password
+          password: state.password,
         };
-        axios.post('/login', credentials ).then(() => {
-          commit('LOGGED_IN_MESSAGE');
-          router.push({ path: '/' });
-        }).catch( () => {
-          commit('SHOW_ERROR');
-          commit('ERROR_MESSAGE', 'Wrong email or password');
-        });
+        axios
+          .post('/login', credentials)
+          .then(() => {
+            commit('LOGGED_IN_MESSAGE');
+            router.push({ path: '/' });
+          })
+          .catch(() => {
+            commit('SHOW_ERROR');
+            commit('ERROR_MESSAGE', 'Wrong email or password');
+          });
       },
-      loggedIn ({ commit }) {
+      loggedIn({ commit }) {
         commit('LOGGED_IN_MESSAGE');
       },
-      signup ({ commit, state }) {
+      signup({ commit, state }) {
         const credentials = {
           email: state.email,
-          password: state.password
+          password: state.password,
         };
         const emailFlag = state.sendEmail;
         axios({
@@ -174,112 +178,113 @@
           url: '/signup',
           data: credentials,
           headers: {
-            sendWelcomeEmail: emailFlag
-          }
-        }).then(() => {
-          commit('LOGGED_IN_MESSAGE');
-          router.push({ path: '/' });
-        }).catch( () => {
-          commit('SHOW_ERROR');
-          commit('ERROR_MESSAGE', 'Could not sign up');
-        });
+            sendWelcomeEmail: emailFlag,
+          },
+        })
+          .then(() => {
+            commit('LOGGED_IN_MESSAGE');
+            router.push({ path: '/' });
+          })
+          .catch(() => {
+            commit('SHOW_ERROR');
+            commit('ERROR_MESSAGE', 'Could not sign up');
+          });
       },
       sendEmailFlag({ commit }, checked) {
         commit('SEND_EMAIL_FLAG', checked);
-      }
-    }
+      },
+    },
   });
 
   const login = Vue.component('login', {
     template: '#login',
     computed: {
-      email () {
+      email() {
         return this.$store.getters.email;
       },
-      password () {
+      password() {
         return this.$store.getters.password;
-      }
+      },
     },
     methods: {
-      setEmail (e) {
+      setEmail(e) {
         this.$store.dispatch('setEmail', e.target.value);
       },
-      setPassword (e) {
+      setPassword(e) {
         this.$store.dispatch('setPassword', e.target.value);
       },
-      loginSend () {
+      loginSend() {
         this.$store.dispatch('login');
-      }
-    }
+      },
+    },
   });
 
   const signup = Vue.component('signup', {
     template: '#signup',
     computed: {
-      email () {
+      email() {
         return this.$store.getters.email;
       },
-      password () {
+      password() {
         return this.$store.getters.password;
       },
-      sendEmail () {
+      sendEmail() {
         return this.$store.getters.sendEmail;
-      }
+      },
     },
     methods: {
-      setEmail (e) {
+      setEmail(e) {
         this.$store.dispatch('setEmail', e.target.value);
       },
-      setPassword (e) {
+      setPassword(e) {
         this.$store.dispatch('setPassword', e.target.value);
       },
-      signupSend () {
+      signupSend() {
         this.$store.dispatch('signup');
       },
-      sendEmailFlag (e) {
+      sendEmailFlag(e) {
         this.$store.dispatch('sendEmailFlag', e.target.checked);
-      }
-    }
+      },
+    },
   });
 
   const todoapp = Vue.component('todoapp-template', {
     template: '#todoapp-template',
     data() {
       return {
-        showByIndex: null
+        showByIndex: null,
       };
     },
-    created () {
+    created() {
       this.$store.dispatch('loadTodos');
     },
     computed: {
-      loading () {
+      loading() {
         return this.$store.getters.loading;
       },
-      newTodo () {
+      newTodo() {
         return this.$store.getters.newTodo;
       },
-      todos () {
+      todos() {
         return this.$store.getters.todos;
-      }
+      },
     },
     methods: {
-      setNewTodo (e) {
+      setNewTodo(e) {
         this.$store.dispatch('setNewTodo', e.target.value);
       },
-      addTodo (e) {
+      addTodo(e) {
         e.target.value = '';
         this.$store.dispatch('addTodo');
         this.$store.dispatch('clearNewTodo');
       },
-      completeTodo (todo) {
+      completeTodo(todo) {
         this.$store.dispatch('completeTodo', todo);
       },
-      removeTodo (todo) {
+      removeTodo(todo) {
         this.$store.dispatch('removeTodo', todo);
-      }
-
-    }
+      },
+    },
   });
 
   const router = new VueRouter({
@@ -288,8 +293,8 @@
       { path: '/', name: 'todoapp', component: todoapp },
       { path: '/login', name: 'login', component: login },
       { path: '/signup', name: 'signup', component: signup },
-      { path: '*', redirect: {name: 'todoapp'} }
-    ]
+      { path: '*', redirect: { name: 'todoapp' } },
+    ],
   });
 
   // app Vue instance
@@ -302,16 +307,16 @@
       }
     },
     computed: {
-      errorMessage () {
+      errorMessage() {
         return this.$store.getters.errorMessage;
       },
       loggedIn() {
         return this.$store.getters.loggedIn;
-      }
-    }
+      },
+    },
   }).$mount('#app');
 
-  function getCookie(name){
+  function getCookie(name) {
     var pattern = RegExp(name + '=.[^;]*');
     var matched = document.cookie.match(pattern);
     if (matched) {
@@ -323,8 +328,7 @@
   var el = document.getElementById('todo-list');
   if (el) {
     Sortable.create(el, {
-      animation: 150
+      animation: 150,
     });
   }
-
 })();
